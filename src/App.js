@@ -14,6 +14,7 @@ import SearchBar from "./components/SearchBar/SearchBar"
 import './App.css';
 
 import dummyData from './dummy-data'
+import { text } from '@fortawesome/fontawesome-svg-core';
 
 const App = () => {
   // Create a state called `posts` to hold the array of post objects, **initializing to dummyData**.
@@ -21,8 +22,7 @@ const App = () => {
   // This state is the source of truth for the data inside the app. You won't be needing dummyData anymore.
   // To make the search bar work (which is stretch) we'd need another state to hold the search term.
   const [ query, setQuery ] = useState('')
-  const [postliked, setPostLiked ] = useState([])
-
+  const [ postliked, setPostLiked ] = useState([])
   const likePost = postId => {
     const updatedPost = posts.map((item) => {
         if(item.id === postId && !postliked.includes(item.id)){
@@ -34,24 +34,31 @@ const App = () => {
         }
     })
     setPosts(updatedPost)
-    /*
-      This function serves the purpose of increasing the number of likes by one, of the post with a given id.
-
-      The state of the app lives at the top of the React tree, but it wouldn't be fair for nested components not to be able to change state!
-      This function is passed down to nested components through props, allowing them to increase the number of likes of a given post.
-
-      Invoke `setPosts` and pass as the new state the invocation of `posts.map`.
-      The callback passed into `map` performs the following logic:
-        - if the `id` of the post matches `postId`, return a new post object with the desired values (use the spread operator).
-        - otherwise just return the post object unchanged.
-     */
   };
+
+  function newComment(event, postID){
+    if(event.keyCode === 13){
+      const { value } = event.target
+      const newPosts = posts.map((item) => {
+        if(item.id ===  postID){
+          item.comments.push({
+            id: "XX",
+            username: "Unknown user",
+            text: value,
+          })
+        }
+        return item
+      })
+      console.log(newPosts)
+      setPosts(newPosts)
+    }
+  }
 
   return (
     <div className='App'>
       {/* Add SearchBar and Posts here to render them */}
       <SearchBar />
-      <Posts posts={posts} likePost={likePost}/>
+      <Posts posts={posts} likePost={likePost} newComment={newComment}/>
       {/* Check the implementation of each component, to see what props they require, if any! */}
     </div>
   );
