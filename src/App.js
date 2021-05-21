@@ -54,11 +54,16 @@ const App = () => {
     }
   }
 
+  function search(event){
+    const { value } = event.target
+    setQuery(value);
+  }
+
   return (
     <div className='App'>
       {/* Add SearchBar and Posts here to render them */}
-      <SearchBar />
-      <Posts posts={posts} likePost={likePost} newComment={newComment}/>
+      <SearchBar search={search}/>
+      <Posts posts={posts} likePost={likePost} newComment={newComment} query={query}/>
       {/* Check the implementation of each component, to see what props they require, if any! */}
     </div>
   );
